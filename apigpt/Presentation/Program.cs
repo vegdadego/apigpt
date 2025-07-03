@@ -16,6 +16,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // 2. Inyección de dependencias para el repositorio genérico
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+// Registro de servicios de aplicación
+builder.Services.AddScoped<Application.EstudianteService>();
+builder.Services.AddScoped<Application.SemesterEnrollmentService>();
+
+// Registro de repositorios personalizados
+builder.Services.AddScoped<Application.IEstudianteRepository, Infrastructure.EstudianteRepository>();
+builder.Services.AddScoped<Application.ISemesterEnrollmentRepository, Infrastructure.SemesterEnrollmentRepository>();
+builder.Services.AddScoped<Application.ICursoRepository, Infrastructure.CursoRepository>();
+
 // 3. Configuración de CORS (permitir cualquier origen, método y header)
 builder.Services.AddCors(options =>
 {
@@ -86,11 +95,22 @@ var app = builder.Build();
 app.UseCors("AllowAll");
 
 // Usar Swagger
-if (app.Environment.IsDevelopment())
-{
+    app.Use(async (context, next) =>
+    {
+        if (context.Request.Path.StartsWithSegments("/swagger"))
+        {
+            var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+            if (remoteIp != "187.155.101.200")
+            {
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync("Acceso a Swagger solo permitido desde la IP autorizada.");
+                return;
+            }
+        }
+        await next();
+    });
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 // Usar autenticación y autorización
 app.UseAuthentication();
