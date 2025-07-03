@@ -1,0 +1,58 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+
+# ASP.NET Secrets
+secrets.json
+
+# Dotnet tools
+.tools/
+
+# Logs
+*.log
+
+# Database
+*.mdf
+*.ldf
+
+# Others
+*.db
+*.sqlite
+
+# Publish
+publish/
+
+# Test results
+TestResults/
+
+# Local configuration
+appsettings.Development.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Onion architecture: ignora bin/obj en todas las capas
+Application/bin/
+Application/obj/
+Core/bin/
+Core/obj/
+Entities/bin/
+Entities/obj/
+Infrastructure/bin/
+Infrastructure/obj/
+Presentation/bin/
+Presentation/obj/ 
