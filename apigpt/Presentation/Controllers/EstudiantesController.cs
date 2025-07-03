@@ -41,9 +41,13 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 50)
         {
-            var estudiantes = await _service.GetAllAsync();
+            if (page <= 0)
+                return BadRequest("El número de página debe ser mayor a 0.");
+            if (pageSize <= 0 || pageSize > 50)
+                return BadRequest("El tamaño de página debe ser entre 1 y 50.");
+            var estudiantes = await _service.GetAllAsync(page, pageSize);
             return Ok(estudiantes);
         }
 
