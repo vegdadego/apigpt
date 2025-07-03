@@ -28,16 +28,4 @@ namespace Presentation.Controllers
             return Ok();
         }
     }
-
-    // DTOs para inscripción
-    public class IniciarInscripcionDto
-    {
-        public int EstudianteId { get; set; }
-        public string Semestre { get; set; }
-        public int MaxCreditos { get; set; }
-    }
-    public class AgregarCursoDto
-    {
-        public int CursoId { get; set; }
-    }
 } 

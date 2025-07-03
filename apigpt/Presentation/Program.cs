@@ -85,7 +85,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddScoped<IValidator<Application.UsuarioDto>, Application.UsuarioValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<Application.UsuarioValidator>();
 
 builder.Services.AddControllers();
 

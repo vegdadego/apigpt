@@ -17,16 +17,6 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearEstudianteDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Nombre))
-                return BadRequest("El nombre es obligatorio.");
-            if (string.IsNullOrWhiteSpace(dto.Matricula))
-                return BadRequest("La matrícula es obligatoria.");
-            if (string.IsNullOrWhiteSpace(dto.Carrera))
-                return BadRequest("La carrera es obligatoria.");
-            if (dto.SemestreActual <= 0)
-                return BadRequest("El semestre actual debe ser mayor a 0.");
-            if (dto.CreditosMaximosPorSemestre <= 0)
-                return BadRequest("Los créditos máximos por semestre deben ser mayores a 0.");
             var estudiante = await _service.CrearEstudianteAsync(dto.Nombre, dto.Matricula, dto.Carrera, dto.SemestreActual, dto.CreditosMaximosPorSemestre);
             return Ok(estudiante);
         }
@@ -67,37 +57,10 @@ namespace Presentation.Controllers
         {
             if (id <= 0)
                 return BadRequest("Id inválido.");
-            if (string.IsNullOrWhiteSpace(dto.Nombre))
-                return BadRequest("El nombre es obligatorio.");
-            if (string.IsNullOrWhiteSpace(dto.Carrera))
-                return BadRequest("La carrera es obligatoria.");
-            if (dto.SemestreActual <= 0)
-                return BadRequest("El semestre actual debe ser mayor a 0.");
-            if (dto.CreditosMaximosPorSemestre <= 0)
-                return BadRequest("Los créditos máximos por semestre deben ser mayores a 0.");
             var actualizado = await _service.ActualizarAsync(id, dto);
             if (!actualizado)
                 return NotFound();
             return NoContent();
         }
-    }
-
-    // DTO para crear estudiante
-    public class CrearEstudianteDto
-    {
-        public string Nombre { get; set; }
-        public string Matricula { get; set; }
-        public string Carrera { get; set; }
-        public int SemestreActual { get; set; }
-        public int CreditosMaximosPorSemestre { get; set; }
-    }
-
-    // DTO para actualizar estudiante
-    public class ActualizarEstudianteDto
-    {
-        public string Nombre { get; set; }
-        public string Carrera { get; set; }
-        public int SemestreActual { get; set; }
-        public int CreditosMaximosPorSemestre { get; set; }
     }
 } 
