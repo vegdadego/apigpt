@@ -106,6 +106,23 @@ app.UseSwaggerUI(c =>
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Middleware global para logging de errores (diagnóstico temporal)
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        // Loguear el error en consola y en el response
+        Console.WriteLine($"[ERROR GLOBAL] {ex.Message}\n{ex.StackTrace}");
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync($"{{\"error\":\"{ex.Message}\",\"stack\":\"{ex.StackTrace?.Replace("\n", " ").Replace("\"", "'") }\"}}");
+    }
+});
+
 app.MapControllers();
 
 app.Run();
