@@ -94,29 +94,13 @@ var app = builder.Build();
 // Usar CORS
 app.UseCors("AllowAll");
 
-// Usar Swagger
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.StartsWithSegments("/swagger"))
-    {
-        var remoteIp = context.Connection.RemoteIpAddress;
-        var ipV4 = remoteIp?.MapToIPv4().ToString();
-        var ipOriginal = remoteIp?.ToString();
-
-        // Log temporal para depuración
-        Console.WriteLine($"IP detectada: {ipOriginal} (IPv4: {ipV4})");
-
-        if (ipV4 != "187.155.101.200" && ipV4 != "127.0.0.1" && ipOriginal != "::1")
-        {
-            context.Response.StatusCode = 403;
-            await context.Response.WriteAsync("Acceso a Swagger solo permitido desde la IP autorizada o localhost.");
-            return;
-        }
-    }
-    await next();
-});
+// Usar Swagger en desarrollo y producción
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Examen API v1");
+    c.RoutePrefix = "swagger";
+});
 
 // Usar autenticación y autorización
 app.UseAuthentication();
